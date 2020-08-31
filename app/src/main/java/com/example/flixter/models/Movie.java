@@ -12,6 +12,7 @@ public class Movie {
     Create new folders (right-click, New, Package, name folder) to store how you
     want things to be designed
      */
+    String backdropPath;
     String posterPath;
     String title;
     String overview;
@@ -20,6 +21,7 @@ public class Movie {
     public Movie (JSONObject jsonObject) throws JSONException {//throws MUST handle
         //Obtains info based on values in the JSON
         posterPath = jsonObject.getString("poster_path");
+        backdropPath = jsonObject.getString("backdrop_path");
         title = jsonObject.getString("title");
         overview = jsonObject.getString("overview");
     }
@@ -44,6 +46,10 @@ public class Movie {
      */
     public String getPosterPath() {
         return String.format("https://image.tmdb.org/t/p/w342/%s", posterPath);//Where %s is replaced with String after comma
+    }
+
+    public String getBackdropPath() {
+        return String.format("https://image.tmdb.org/t/p/w342/%s", backdropPath);
     }
 
     public String getTitle() {
