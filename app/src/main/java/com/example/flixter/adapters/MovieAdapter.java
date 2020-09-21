@@ -1,20 +1,28 @@
 package com.example.flixter.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.flixter.DetailActivity;
 import com.example.flixter.R;
 import com.example.flixter.models.Movie;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -65,6 +73,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         TextView tvTitle;
         TextView tvOverview;
         ImageView ivPoster;
+        RelativeLayout container;
 
         /*
         Create all views from xml styled format
@@ -74,11 +83,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverview = itemView.findViewById(R.id.tvOverview);
             ivPoster = itemView.findViewById(R.id.ivPoster);
+            container = itemView.findViewById(R.id.container);
         }
 
-        public void bind(Movie movie) {
+        public void bind(final Movie movie) {
             tvTitle.setText(movie.getTitle());
             tvOverview.setText(movie.getOverview());
+
+            //Sets the title color to orange if the rating is >= 7
+            if (movie.getRating() >= 7.0) {
+                tvTitle.setTextColor(Color.parseColor("#FF8C00"));
+            }
+
+            Log.d("MovieAdapter", "Overview Height: " + tvOverview.getMeasuredHeightAndState());
 
             String imageURL;//Change image based on orientation (posterPath or backdropPath)
             if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -89,6 +106,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             //Create Glide dependency to display images
             Glide.with(context).load(imageURL).into(ivPoster);
 
+            //Register clickListener on whole container; renamed the item xml's "container"
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Navigate to new activity with Intent (w/ context and class)
+                    Intent i = new Intent(context, DetailActivity.class);
+                    //i.putExtra("title", movie.getTitle());//Sends data from this class to new Activity/Intent
+                    //Requires Parse data, used dependency for Parcelable to wrap movie, requires changes in model(s)
+                    i.putExtra("movie", Parcels.wrap(movie));
+                    context.startActivity(i);
+                }
+            });
 
         }
     }

@@ -3,20 +3,27 @@ package com.example.flixter.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Parcel
 public class Movie {
     /*Classic class; encapsulats what we want our movie to be
     Create new folders (right-click, New, Package, name folder) to store how you
     want things to be designed
      */
+    int movieId;
     String backdropPath;
     String posterPath;
     String title;
     String overview;
+    double rating;
     //The above represents the JSON parts that make a movie
+
+    //Empty constructor required by Parcel
+    public Movie () {}
 
     public Movie (JSONObject jsonObject) throws JSONException {//throws MUST handle
         //Obtains info based on values in the JSON
@@ -24,6 +31,8 @@ public class Movie {
         backdropPath = jsonObject.getString("backdrop_path");
         title = jsonObject.getString("title");
         overview = jsonObject.getString("overview");
+        rating = jsonObject.getDouble("vote_average");
+        movieId = jsonObject.getInt("id");
     }
 
     //Create a movie for every element in JSON Array
@@ -58,5 +67,11 @@ public class Movie {
 
     public String getOverview() {
         return overview;
+    }
+
+    public double getRating() { return rating; }
+
+    public int getMovieId() {
+        return movieId;
     }
 }
